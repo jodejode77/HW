@@ -1,0 +1,132 @@
+#include <iostream>
+#include <limits>
+
+class Node{
+	private:
+		int data;
+		Node* right;
+		Node* left;
+	public:
+		Node(int n)
+		{
+		this->data = n;
+		this->right = nullptr;
+		this->left = nullptr;
+		}	
+		
+		friend class BinarySearch;
+};
+
+
+class BinarySearch{
+	
+	public:
+	
+	void insertNode(Node *&root, int n){
+		Node* newNode = new Node(n);
+		
+		if(root == nullptr) root = newNode;
+		
+		else {
+			const int value = root->data;
+			
+			if (n < value) insertNode(root->left, n);
+			else if (n > value) insertNode(root->right, n);
+		}
+	}
+	
+	void printTree(Node* root, int counter){
+		if (root == nullptr) return;
+		
+		else{
+			printTree(root->right, counter+1);
+			
+			for(int i=0; i<counter; i++){
+				std::cout<<"   ";	
+			}
+			
+			std::cout<<root->data<<"\n";
+			
+			printTree(root->left, counter+1);
+		}
+	}
+	
+	int findMin(Node *root){
+		if(root == nullptr) return INT_MAX;
+		
+		int value = root->data;
+		int rightValue = findMin(root->right);
+		int leftValue = findMin(root->left);
+		
+		if(leftValue < value) value = leftValue;
+		
+		if(rightValue < value) value = rightValue;
+		
+		return value;
+	}
+	int findMax(Node *root){
+		if(root == nullptr) return INT_MIN;
+		
+		int value = root->data;
+		int rightValue = findMax(root->right);
+		int leftValue = findMax(root->left);
+		
+		if(leftValue > value) value = leftValue;
+		
+		if(rightValue > value) value = rightValue;
+		
+		return value;
+	}
+	
+	Node *deleteMax(Node *root){   
+		int max = findMax(root);
+		if (root == nullptr) return root;
+		
+		else if (max > root->data) root->right = deleteMax(root->right);
+			
+		if (root->right == nullptr and root->data == max) root = root->left;
+	
+		return root;
+	}
+	
+	Node *deleteMin(Node *root){   
+		int min = findMin(root);
+		if (root == nullptr) return root;
+		
+		else if (min < root->data) root->left = deleteMin(root->left);
+	
+		if (root->left == nullptr and root->data == min) root = root->right;
+	
+		return root;
+	}
+};
+
+
+int main(){
+	Node *base = nullptr;
+	BinarySearch mytree;
+	int n,counter = 0,k, option;
+	
+	std::cout<<"Enter the number of elements: "; std::cin>>k;
+	
+	
+	for (int i=0; i<k; i++){
+	std::cout<<"Enter the term ["<<i+1<<"] of the tree: ";
+	std::cin>>n; 
+	mytree.insertNode(base,n);
+	}
+	
+	std::cout<<"Printing tree: \n\n";
+	mytree.printTree(base, counter);
+	
+	int min = mytree.findMin(base);
+	int max = mytree.findMax(base);
+	std::cout<<"\nThe minimum is: "<<min;
+	std::cout<<"\nThe maximum is: "<<max;
+	
+	base = mytree.deleteMax(base); // or base = mytree.deleteMin(base);
+	
+	std::cout<<"\nPrinting tree: \n\n";
+	mytree.printTree(base, counter);
+	return 0;
+}

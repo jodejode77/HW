@@ -1,0 +1,66 @@
+#include <iostream>
+
+struct string{
+	char str[10]; // [10] It can be changed depending on the length of each element
+};
+
+int main(){
+	
+	int n,k, counter, p=0;
+
+	std::cout<<"Enter the number of elements of the general array: "; std::cin>>n;
+	std::cout<<"Enter the Kth distinct element: "; std::cin>>k;
+	
+	string array[n],final[n];
+	
+	std::cout<<"Enter the elements of the array:";
+	
+	for (int i=0; i<n; i++){
+		std::cin>>array[i].str;
+	}
+
+	for(int i=0; i<n;i++){
+		counter = 1;
+		
+		for(int j=0; j<n;j++){
+			
+			if (i == j){
+				continue;
+			}
+			
+			else if (strlen(array[i].str) != strlen(array[j].str)){
+					counter++;
+					continue;
+			}
+			
+			else if (strlen(array[i].str) == strlen(array[j].str)){
+				
+				for (int l=0; l<strlen(array[i].str);l++){
+					
+					if( array[i].str[l] != array[j].str[l] ){
+						counter++;
+						break;
+					}
+				}
+			}	
+		}
+		
+		if (counter == n){
+			final[p] = array[i];
+			p++;
+		}				
+	}
+	
+	
+	std::cout<<"\n\nDistinct Kth: ";
+	
+	if(p+1>=k){
+		std::cout<<"'"<<final[k-1].str<<"'";
+	}
+	
+	else if (p+1<k){
+		std::cout<<"''";
+	}
+		
+	return 0;
+}

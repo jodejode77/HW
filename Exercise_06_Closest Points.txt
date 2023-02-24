@@ -1,0 +1,47 @@
+#include <iostream>
+#include<cmath>
+
+struct coord{
+	float x,y;
+	float d;
+};
+
+float distance(coord n){
+	float d = ( pow(n.x, 2) + pow(n.y, 2) );
+	return d;
+}
+
+int main(){
+	int l,k;
+	
+	std::cout<<"Enter the number of points: "; std::cin>>l;
+	std::cout<<"\nEnter the number of points (k) closest to the origin: "; std::cin>>k;
+	
+	coord rect[l],aux;
+	
+	std::cout<<"\nEnter the points (Separated by a space OR press enter after each ordered pair: ";
+	
+	for (int i=0; i<l; i++){
+		std::cin>>rect[i].x>>rect[i].y;
+		rect[i].d = distance(rect[i]);
+	}
+	
+	for (int i=0; i<l; i++){
+		for (int j=0; j<l-1; j++){
+			if ( rect[i].d < rect[j].d ){
+				aux = rect[i];
+				rect[i] = rect[j];
+				rect[j] = aux;
+			}
+		}
+	}
+	
+	std::cout<<"\n[";
+	for (int i=0;i<k;i++){
+		if (i == (k-1)) std::cout<<"["<<rect[i].x<<","<<rect[i].y<<"]";
+		else std::cout<<"["<<rect[i].x<<","<<rect[i].y<<"],";
+	}
+	std::cout<<"]";
+	
+	return 0;
+}

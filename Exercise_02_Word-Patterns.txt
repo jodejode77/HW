@@ -1,0 +1,126 @@
+#include <iostream>
+#include <stdlib.h>
+
+struct string{
+	char *str = new char[10]; // [10] It can be changed depending on the length of each element
+	int *pt = new int[10];  // [10] It can be changed depending on the length of each element
+};
+
+int *get_patron(string mod){
+	int counter = 1,k;
+	int *array_p = new int[10]; array_p[0] = counter;
+	
+	for(int i=0; i<strlen(mod.str);i++){
+		array_p[i] = 0;
+	}
+	
+	for(int i=0; i<strlen(mod.str);i++){
+		k = 1;
+		for(int j=0; j<strlen(mod.str);j++){
+					
+			if (i == j) continue;
+			
+			if (i==0){
+				array_p[i] = counter;
+				
+				if( mod.str[i] == mod.str[j]){
+					array_p[j] = counter;
+					k++;
+					continue;
+				}				
+			}
+			
+			if (array_p[i] != 0){
+				k++;
+				continue;
+			}
+			
+			else{
+				if( (mod.str[i] == mod.str[j]) and (array_p[i]==0) ){
+				array_p[i] = counter;
+				array_p[j] = counter;
+				k++;
+				continue;
+				}
+			}
+					
+		}
+		
+		if (k == 1){
+			array_p[i] = counter;
+		}
+		
+		counter++;		
+	}
+	
+	return array_p;			
+}
+	
+
+
+int main(){
+	int n,c,p=0; std::cout<<"Enter the number of words you will write: "; std::cin>>n;
+	int coincidences[n];
+	string pattern;
+	string *array = new string[n];
+	
+	std::cout<<"Enter the pattern: "; std::cin>>pattern.str;
+	
+	pattern.pt = get_patron(pattern);
+	
+	std::cout<<"Enter the elements of the array:";
+	
+	for (int i=0; i<n; i++){
+		std::cin>>array[i].str;
+		array[i].pt = get_patron(array[i]);
+	}
+	
+	for (int i=0; i<n; i++){
+		c = 0;
+		for (int j=0; j<strlen(array[i].str); j++){
+			
+			if (strlen(array[i].str) != strlen(pattern.str)) continue;
+	
+			if (array[i].pt[j] == pattern.pt[j]){
+				c++;
+			}
+	
+			if (array[i].pt[j] != pattern.pt[j]){
+				break;
+				c = 0;
+			}
+		}
+		
+		if (c == strlen(pattern.str)){
+			coincidences[p] = i;
+			p++;
+		}
+	}
+	
+	std::cout<<"The matches are: ['";
+	
+	for(int i=0; i<p;i++){
+		for(int j=0; j<strlen(pattern.str);j++){
+			if ((j == (strlen(pattern.str) - 1)) and (i == p-1)){
+				 std::cout<<array[coincidences[i]].str[j]<<"'";
+				 break;
+			}
+			if (j == (strlen(pattern.str) - 1)) std::cout<<array[coincidences[i]].str[j]<<"','";
+			else std::cout<<array[coincidences[i]].str[j];
+		}
+	}
+	
+	std::cout<<"]";
+	
+	delete[] pattern.pt;
+	delete[] pattern.str;
+	
+	for(int i=0; i<n;i++){
+		delete[] array[i].str;
+		delete[] array[i].pt;
+	}
+	
+	delete[] array;
+	
+	return 0;
+}

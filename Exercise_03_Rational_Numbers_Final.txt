@@ -1,0 +1,139 @@
+#include <iostream>
+#include <algorithm>
+
+class rational{
+	private:
+		long p;
+		long q; 
+	
+	public:
+		rational(): p(0), q(1){ }
+		rational(long P, long Q): p(P), q(Q){ }
+		~rational() = default;
+		
+		long get_Numerator() const { return p; }
+		long get_Denominator() const { return q; }
+		
+		rational operator + (const rational other) const
+		{
+			long P = (p * other.q) + (q * other.p);
+			long Q = (q * other.q );
+			int gcd = std::__gcd ( (int)P, (int)Q );
+			return rational( P/gcd, Q/gcd );    // or /-> less understandable -> return rational ( ((p * other.q) + (q * other.p)) / std::__gcd((int)((p * other.q) + (q * other.p)), (int)((q * other.p))), (q * other.q)/ std::__gcd((int)((p * other.q) + (q * other.p)), (int)((q * other.p)))); /
+		}
+		
+		rational operator - (const rational other) const
+		{
+			long P = (p * other.q) - (q * other.p);
+			long Q = q * other.q; 
+			int gcd = std::__gcd ( (int)P, (int)Q );
+			return rational( P/gcd , Q/gcd );
+		}
+		
+		rational operator * (const rational other) const
+		{
+			long P = p * other.p;
+			long Q = q * other.q;
+			int gcd = std::__gcd( (int)P , (int)Q );
+			return rational( P/gcd , Q/gcd );
+		}
+		
+		rational operator / (const rational other) const
+		{
+			long P = p * other.q;
+			long Q = q * other.p;
+			int gcd = std::__gcd( (int)P , (int)Q );
+			return rational( P/gcd , Q/gcd );
+		}
+		
+		bool operator == (const rational other) const
+		{	
+			if ( p * other.q == q * other.p) return true;
+			
+			else {
+				return false;
+			}
+		}
+		bool operator != (const rational other) const
+		{
+			if ( p * other.q != q * other.p) return true;
+			
+			else {
+				return false;
+			}
+		}
+		
+		bool operator < (const rational other) const
+		{
+			if ( (p * other.q) < (other.p * q)) return true;
+			
+			else{
+				return false;
+			}
+		}
+		
+		bool operator <= (const rational other) const
+		{
+			if ( ( (p * other.q) < (other.p * q) ) or (p * other.q == q * other.p) ) return true;
+			
+			else{
+				return false;
+			}
+		}
+		
+		bool operator > (const rational other) const
+		{
+			if ( (p * other.q) > (other.p * q)) return true;
+			
+			else{
+				return false;
+			}
+		}
+		
+		bool operator >= (const rational other) const
+		{
+			if ( ( (p * other.q) > (other.p * q) ) or (p * other.q == q * other.p) ) return true;
+			
+			else{
+				return false;
+			}
+		}
+		
+		friend std::ostream& operator << (std::ostream&, const rational&);
+		friend std::istream& operator >> (std::istream&, rational&);
+		friend double to_double(const rational);
+};
+
+std::ostream& operator << (std::ostream& Cout, const rational& other){
+	if (other.q == 1){
+		Cout << other.p;
+		return Cout;
+	}
+	else if (other.q < 0){
+		Cout<< "-" << other.p << " / " << other.q * -1;
+		return Cout;
+	}
+	else{
+	Cout << other.p / std::__gcd((int)other.p , (int)other.q) << " / " <<other.q / std::__gcd((int)other.p , (int)other.q);
+	return Cout;
+	}
+}
+
+std::istream& operator >> (std::istream& Cin, rational& other){
+	Cin >> other.p >> other.q;
+	return Cin;
+}
+
+double to_double(const rational other){
+	return ((double)other.p / (double)other.q);
+}
+
+int main(){
+	rational x(4,5), y(20,25);
+	bool k = (x == y);
+	std::cout<< k ;
+	std::cout<<"\n"<<x+y;
+
+	std::cout<<"\n"<<to_double(x+y);
+	return 0;
+}

@@ -1,0 +1,35 @@
+#include <iostream>
+
+int pascal(int n, int col){
+	
+	if(col == 1 || col == n){
+		return 1;
+	}
+	
+	return(pascal(n-1, col-1)+pascal(n-1, col));
+}
+
+void finalRow(int n){
+	int counter = 1;
+	int c = n;
+	while (c>=1){
+		if (counter == n) std::cout<<pascal(n,counter);
+		else std::cout<<pascal(n,counter)<<",";
+		c--;
+		counter++;
+	}
+}
+
+int main(){
+	
+	int n;
+	
+	std::cout<<"Enter the row: "; std::cin>>n;
+	
+	std::cout<<"The "<<n<<" row of the Pascal's triangle is: \n"<<"[";
+	
+	finalRow(n+1);
+	std::cout<<"]";
+	
+	return 0;
+}

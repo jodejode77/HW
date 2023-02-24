@@ -1,0 +1,89 @@
+#include <iostream>
+#include <cmath>
+
+class complex
+{
+	private:
+		float Real, Imag;
+
+	public:
+		
+		complex(): Real(0), Imag(0){ }
+		
+		complex(float real, float imag): Real(real), Imag(imag) { }
+		
+		~complex() = default;
+		
+		float get_Real() const {return Real;}
+		float get_Imag() const {return Imag;}
+		
+		void set_Real(float real){
+			Real = real;
+		}
+		
+		void set_Imag(float imag){
+			Imag = imag;
+		}
+		
+		complex conjugate() const
+		{
+			return complex(Real, -Imag);	
+		}
+		
+		float module() const
+		{
+			return sqrt( pow(Real, 2) + pow(Imag, 2) );	
+		}
+		
+		complex operator + (const complex other) const
+		{
+			return complex(Real + other.Real, Imag + other.Imag);
+		}
+		
+		complex operator - (const complex other) const
+		{
+			return complex(Real - other.Real, Imag - other.Imag);
+		}
+		
+		complex operator * (const complex other) const
+		{
+			return complex( (Real * other.Real) - (Imag * other.Imag) , (Real * other.Imag) + (Imag * other.Real) );
+		}
+		
+		complex operator / (const complex other) const
+		{
+			if (other.module() != 0)
+			{
+				return complex( ( (Real * other.Real) + (Imag * other.Imag) ) / pow(other.module(), 2) , ( (Imag * other.Real) - (Real * other.Imag)) / pow(other.module(),2));
+			}
+			else std::cout<<"Indeterminate -- It is not possible to divide by 0\n";
+		}
+		
+		friend void print_trigForm(const complex);
+		friend std::ostream& operator<<(std::ostream& Cout, const complex& other);
+		friend std::istream& operator>> (std::istream& Cin, complex& other);
+};
+
+std::ostream& operator<<(std::ostream& Cout, const complex& other){
+	Cout<< other.Real << " + " << other.Imag << "i\n";
+	return Cout;
+}
+
+std::istream& operator>> (std::istream& Cin, complex& other){
+	Cin >> other.Real >> other.Imag;
+	return Cin;
+}
+
+void print_trigForm(const complex other)
+		{
+			float angle = atan(other.Imag/other.Real);
+			std::cout<<other.module()<<"(cos("<<angle<<") + i*sin("<<angle<<"))\n";
+		}
+		
+int main(){
+	complex x(3,4), y(0,0);
+	std::cout<<x/y<<"\n";
+	print_trigForm(x/y);
+	
+	return 0;
+}

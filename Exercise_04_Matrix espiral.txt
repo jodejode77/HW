@@ -1,0 +1,119 @@
+#include <iostream>
+
+int main(){
+	int k,m,n; //Input information
+	int x=0,y=0, term=0, cycle=1;
+	int base_n=0, base_m=0;
+	int **array_spiral, *array_normal;
+	
+	
+	std::cout<<"Enter the number of elements of your normal array: "; std::cin>>k;
+	
+	std::cout<<"Enter the number of rows(m): "; std::cin>>m;
+	
+	std::cout<<"Enter the number of columns(n): "; std::cin>>n;
+	
+	
+	array_normal = new int[m*n];
+	
+	std::cout<<"Enter the elements of your normal array: ";
+	
+	for(int i=0; i<k; i++){
+		std::cin>>array_normal[i];
+	}
+	
+	if(k != (m*n)){
+		for(int i=k; i<m*n; i++){
+			array_normal[i]= -1;
+		}
+	}
+	
+	array_spiral = new int*[m];
+	
+	for (int i=0; i<m;i++){
+		array_spiral[i] = new int[n];
+	}
+	
+	while(term<m*n){
+
+		if(cycle == 1){
+			
+				while (y< n - base_n){
+					array_spiral[x][y] = array_normal[term];
+						
+					y++;
+					term++;
+				}
+			
+			y--; // to return from the false of the while
+			cycle = 2;
+			
+			continue;	
+			}
+		
+		if(cycle == 2){
+		
+			x++; // jump down - Position: upper right corner // reason: the corner space is already taken
+				while (x<m - base_m){
+					array_spiral[x][y] = array_normal[term];
+				
+					x++;
+					term++;
+				}
+			x--;// to return from the false of the while
+			cycle = 3;
+			
+			continue;
+			}
+		
+		if(cycle == 3){
+			
+			y--;// jump left - Position: lower right corner // reason: Because the corner space is already taken
+				while(y>= base_n){
+					array_spiral[x][y] = array_normal[term];
+					
+					y--;
+					term++;
+				}
+			y++; // to return from the false of the while
+			x--; // jump up - Position: lower left corner // reason: Because the corner space is already taken
+			cycle = 4;
+			base_n += 1; // Change of base
+			continue;
+		}
+		
+		if(cycle == 4){
+		
+				while(x>base_m){
+					array_spiral[x][y] = array_normal[term];
+					
+					x--;
+					term++;
+				}
+			x++; // to return from the false of the while
+			y++; // jump right - Position: upper left corner // reason: Because the corner space is already taken
+			base_m += 1; // Change of base
+			cycle=1;
+		}
+	}
+	
+	delete[] array_normal;
+	
+
+	for(int i=0; i<m;i++){
+		std::cout<<"[";
+		for(int j=0;j<n;j++){
+			std::cout<<"  "<<array_spiral[i][j];
+		}
+		std::cout<<"] , "<<"\n";
+	}
+
+	
+	for(int i=0; i<m;i++){
+		delete[] array_spiral[i];
+	}
+	
+	delete[] array_spiral;
+	
+	return 0;
+}

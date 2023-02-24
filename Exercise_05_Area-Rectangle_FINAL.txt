@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cmath>
+
+struct coord{
+	int x,y;
+};
+
+struct points{
+	coord leftdown, rightdown, rightup, leftup;
+};
+
+points Complete_coord(points k){
+	k.leftup.x = k.leftdown.x;
+	k.leftup.y = k.rightup.y;
+	
+	k.rightdown.x = k.rightup.x;
+	k.rightdown.y = k.leftdown.y;
+	
+	return k;
+}
+
+bool Case_1 (points r1, points r2){
+
+	bool a = ( (r1.leftdown.x < r2.rightup.x) and (r2.rightup.x <= r1.rightup.x) );
+	bool b = ( (r1.leftdown.y < r2.rightup.y) and (r2.rightup.y <= r1.rightup.y) );
+	return a and b; 
+}
+
+bool Case_2 (points r1, points r2){
+	
+	bool a = ( (r1.leftup.x <= r2.leftup.x) and (r2.leftup.x < r1.rightdown.x) );
+	bool b = ( (r1.rightdown.y < r2.leftup.y) and (r2.leftup.y <= r1.leftup.y) );
+	return a and b;
+}
+
+bool Case_3 (points r1, points r2){
+	
+	bool a = ( (r1.leftdown.x <= r2.leftdown.x) and (r2.leftdown.x < r1.rightup.x) );
+	bool b = ( (r1.leftdown.y <= r2.leftdown.y) and (r2.leftdown.y < r1.rightup.y) );
+	
+	return a and b;
+}
+
+bool Case_4 (points r1, points r2){
+	
+	bool a = ( (r1.leftup.x < r2.rightdown.x) and (r2.rightdown.x <= r1.rightdown.x) );
+	bool b = ( (r1.rightdown.y <= r2.rightdown.y) and (r2.rightdown.y < r1.leftup.y) );
+	return a and b;
+}
+
+int diagonal(points k){
+	int d = pow((k.rightup.x - k.leftdown.x), 2 ) + pow((k.rightup.y - k.leftdown.y), 2 );
+	return d;
+}
+
+
+int main(){
+	int d1,d2;
+	points r1,r2,aux;
+
+	std::cout<<"Enter the 1-st coordinates: "; std::cin>>r1.leftdown.x>>r1.leftdown.y>>r1.rightup.x>>r1.rightup.y;
+	r1 = Complete_coord(r1);
+	
+	std::cout<<"Enter the 2-nd coordinates: "; std::cin>>r2.leftdown.x>>r2.leftdown.y>>r2.rightup.x>>r2.rightup.y;
+	r2 = Complete_coord(r2);
+	
+	d1 = diagonal(r1);
+	d2 = diagonal(r2);
+	
+	if(d1<d2){
+		aux = r1;
+		r1 = r2;
+		r2 = aux;	
+	}
+	
+	if (Case_1(r1,r2) or Case_2(r1,r2) or Case_3(r1,r2) or Case_4(r1,r2)) std::cout<<"True";
+	else std::cout<<"False";
+	
+	return 0;
+}
